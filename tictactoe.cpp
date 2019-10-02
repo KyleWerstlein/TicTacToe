@@ -9,16 +9,21 @@ using namespace std;
 void prtGrid(char grid[3][3]);
 char setGrid(char gridSpace);
 char changePlayer(char turn);
-bool checkInput(char input[2]);
-void updateGrid(char * row, char * collumn);
 int getRow(char inputRow);
 int getColumn(char inputColumn);
+bool checkWin(char grid[3][3], char turn);
+bool checkTie(int space, bool playing);
+bool checkGrid(char grid[3][3], int row, int column);
 
 int main() {
   cout << "Welcome to Tic Tac Toe!" << endl;
   char grid[3][3];
   char play[2];
   char turn = 'X';
+  int spaceAvalible = 9;
+  int oWin = 0;
+  int xWin = 0;
+  int ties = 0;
   for(int i = 0; i < 3; i++) {
     for(int j = 0; j < 3; j++) {
       grid[i][j] = setGrid(grid[i][j]);
@@ -29,26 +34,32 @@ int main() {
   while(isPlaying) {
     int row = -1;
     int column = -1;
-    cout << "it's " << turn << "'s turn!";
+    cout << "it's " << turn << "'s turn!" << endl;
     cin.get(play, 3);
     cin.get();
     row = getRow(play[0]);
     column = getColumn(play[1]);
-    grid[row][column] = turn;
-    if(turn == 'X') {
-      turn = 'O';
-    }
-    else {
-      turn = 'X';
-    }
-    for(int i = 0; i < 3; i++) {
-      for(int j = 0; j < 3; j++) {
-	cout << grid[i][j] << " ";
+    if(checkGrid(grid, row, column)) {
+      grid[row][column] = turn;
+      isPlaying = checkWin(grid, turn);
+      if(!checkWin(grid, turn)) {
+	if(turn == 'X') {
+	  xWin++;
+	}
+	else if(turn == 'O') {
+	  oWin++;
+	}
       }
-      cout << endl;
+      turn = changePlayer(turn);
+      spaceAvalible--;
+      if(checkTie(spaceAvalible, checkWin(grid, turn)) {
+	  ties++;
+	}
     }
     prtGrid(grid);
   }
+  cout << "Game Over" << endl;
+  cout << "Ties: " << ties;
   return 0;
 }
 
@@ -71,30 +82,13 @@ char setGrid(char gridSpace) {
 }
 
 char changePlayer(char turn) {
-  if(turn == 'x') {
-    turn = 'o';
+  if(turn == 'X') {
+    turn = 'O';
   }
   else {
-    turn = 'x';
+    turn = 'X';
   }
   return turn;
-}
-
-bool checkInput(char input[2], char * gridPtr) {
-  if((input[0] > 64 && input[0] < 68) || (input[0] > 96 && input[0] < 100)) {
-    if(input[1] > 48 && input[1] < 52) {
-      //changeRow(input[0]);
-      return true;
-    }
-    else {
-      cout << "invalid collumn" << endl;
-      return false;
-    }
-  }
-  else {
-    cout << "invalid row" << endl;
-    return false;
-  }
 }
 
 int getRow(char rowInput) {
@@ -106,6 +100,9 @@ int getRow(char rowInput) {
   }
   else if (rowInput == 'C' || rowInput == 'c') {
     return 2;
+  }
+  else {
+    cout << "Invalid input." << endl;
   }
 }
 
@@ -119,8 +116,52 @@ int getColumn(char columnInput) {
   else if(columnInput == '3') {
     return 2;
   }
+  else {
+    cout << "Invalid input." << endl;
+  }
 }
 
-char updateGrid(int row, int column, char turn) {
-  
+bool checkGrid(char grid[3][3], int row, int column) {
+  if(grid[row][column] != '#') {
+    cout << "Space unavalible." << endl;
+    return false;
+  }
+  else {
+    return true;
+  }
+}
+
+bool checkTie(int space, bool playing) {
+  if(space == 0 && playing = true;) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+bool checkWin(char grid[3][3], char player) {
+  cout << "Player: " << player << endl;
+  if(grid[0][0] == player && grid[1][0] == player && grid[2][0] == player) { // column 1
+    return false;
+  }
+  else if(grid[0][1] == player && grid[1][1] == player && grid[2][1] == player) { // column 2                          
+    return false;
+  }
+  else if(grid[0][2] == player && grid[1][2] == player && grid[2][2] == player) {  // column 3
+    return false;
+  }
+  else if(grid[0][0] == player && grid[0][1] == player && grid[0][2] == player) { // row 1
+    return false;                                                                                                         }
+  else if(grid[1][0] == player && grid[1][1] == player && grid[1][2] == player) { // row 2
+    return false;                                                                                                         }
+  else if(grid[2][0] == player && grid[2][1] == player && grid[2][2] == player) { // row 3
+    return false;                                                                                                         }
+  else if(grid[0][0] == player && grid[1][1] == player && grid[2][2] == player) { // diagonal 1
+    return false;                                                                                                         }
+  else if(grid[0][2] == player && grid[1][1] == player && grid[2][0] == player) { // diagonal 2
+    return false;                                                                                                         }
+  else {
+    return true;
+  }
 }
