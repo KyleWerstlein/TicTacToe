@@ -32,15 +32,20 @@ int main() {
 	}
 	prtGrid(grid);// draw grid
 	bool isPlaying = true;
+	int row = -1;
+	int column = -1;
 	while (isPlaying) { // game loop
-		int row = -1;
-		int column = -1;
 		cout << "it's " << turn << "'s turn!" << endl;
 		cin.get(play, 3);
 		cin.get(); // take input
-		row = getRow(play[0]); // convert input into data usable in my functions
+		if((play[0] > 64 && play[0] < 68) || (play[0] > 96 && play[0] < 100)) {
+			cout << "test";
+			if((play[1] > 48 && play[1] < 52)) {
+				row = getRow(play[0]); // convert input into data usable in my functions
 		column = getColumn(play[1]); // same as above
+		cout << "test0" << endl;
 		if (checkGrid(grid, row, column)) { // if move is legal
+		  cout << "test" << endl;
 			grid[row][column] = turn; // make play on board
 			if (!checkWin(grid, turn)) { // someone wins
 				prtGrid(grid);
@@ -78,6 +83,11 @@ int main() {
 			cout << "X Wins: " << xWin << endl;
 			cout << "O Wins: " << oWin << endl;
 		}
+		else {
+		  cout << "invalid input._" << endl;
+		}
+			}
+		}
 	}
 		return 0;
 }
@@ -87,7 +97,8 @@ bool playPrompt() {
 	bool valid = false;
 	while (!valid) {
 		cout << "Would you like to play again? (y/n)" << endl;
-		cin >> prompt;
+		cin.get(prompt, 1);
+		cin.get();
 		if (prompt[0] == 'y') {
 			cout << "test";
 			return true;
@@ -142,7 +153,8 @@ int getRow(char rowInput) { // letters to number to be used as array index
 		return 2;
 	}
 	else {
-		cout << "Invalid input." << endl;
+		cout << "Invalid input?." << endl;
+		return -1;
 	}
 }
 
@@ -157,7 +169,8 @@ int getColumn(char columnInput) { // same as above
 		return 2;
 	}
 	else {
-		cout << "Invalid input." << endl;
+		cout << "Invalid input!." << endl;
+		return -1;
 	}
 }
 
