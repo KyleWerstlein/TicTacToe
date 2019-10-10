@@ -38,58 +38,55 @@ int main() {
 		cout << "it's " << turn << "'s turn!" << endl;
 		cin.get(play, 3);
 		cin.get(); // take input
-		if((play[0] > 64 && play[0] < 68) || (play[0] > 96 && play[0] < 100)) {
-			cout << "test";
-			if((play[1] > 48 && play[1] < 52)) {
+		if ((play[0] > 64 && play[0] < 68) || (play[0] > 96 && play[0] < 100)) {
+			if ((play[1] > 48 && play[1] < 52)) {
 				row = getRow(play[0]); // convert input into data usable in my functions
-		column = getColumn(play[1]); // same as above
-		cout << "test0" << endl;
-		if (checkGrid(grid, row, column)) { // if move is legal
-		  cout << "test" << endl;
-			grid[row][column] = turn; // make play on board
-			if (!checkWin(grid, turn)) { // someone wins
-				prtGrid(grid);
-				if (turn == 'X') {
-					xWin++;
-				}
-				else if (turn == 'O') {
-					oWin++;
-				}
-				for (int i = 0; i < 3; i++) { // reset grid
-					for (int j = 0; j < 3; j++) {
-						grid[i][j] = setGrid(grid[i][j]);
+				column = getColumn(play[1]); // same as above
+				if (checkGrid(grid, row, column)) { // if move is legal
+					grid[row][column] = turn; // make play on board
+					if (!checkWin(grid, turn)) { // someone wins
+						prtGrid(grid);
+						if (turn == 'X') {
+							xWin++;
+						}
+						else if (turn == 'O') {
+							oWin++;
+						}
+						for (int i = 0; i < 3; i++) { // reset grid
+							for (int j = 0; j < 3; j++) {
+								grid[i][j] = setGrid(grid[i][j]);
+							}
+						}
+						isPlaying = playPrompt();
 					}
-				}
-				isPlaying = playPrompt();
-			}
-			spaceAvalible--; // track empty spaces to detect ties
-			if (checkTie(spaceAvalible, checkWin(grid, turn))) { // check tie
-				ties++;
-				prtGrid(grid);
-				for (int i = 0; i < 3; i++) { // reset grid again
-					for (int j = 0; j < 3; j++) {
-						grid[i][j] = setGrid(grid[i][j]);
+					spaceAvalible--; // track empty spaces to detect ties
+					if (checkTie(spaceAvalible, checkWin(grid, turn))) { // check tie
+						ties++;
+						prtGrid(grid);
+						for (int i = 0; i < 3; i++) { // reset grid again
+							for (int j = 0; j < 3; j++) {
+								grid[i][j] = setGrid(grid[i][j]);
+							}
+						}
+						isPlaying = playPrompt();
+						turn = 'O';
 					}
+					if (spaceAvalible == 0) {
+						spaceAvalible = 9;
+					}
+					prtGrid(grid);
+					turn = changePlayer(turn); // swap player
+					cout << "Ties: " << ties << endl;
+					cout << "X Wins: " << xWin << endl;
+					cout << "O Wins: " << oWin << endl;
 				}
-				isPlaying = playPrompt();
-				turn = 'O';
-			}
-			if (spaceAvalible == 0) {
-				spaceAvalible = 9;
-			}
-			prtGrid(grid);
-			turn = changePlayer(turn); // swap player
-			cout << "Ties: " << ties << endl;
-			cout << "X Wins: " << xWin << endl;
-			cout << "O Wins: " << oWin << endl;
-		}
-		else {
-		  cout << "invalid input._" << endl;
-		}
+				else {
+					cout << "invalid input._" << endl;
+				}
 			}
 		}
 	}
-		return 0;
+	return 0;
 }
 
 bool playPrompt() {
@@ -97,14 +94,12 @@ bool playPrompt() {
 	bool valid = false;
 	while (!valid) {
 		cout << "Would you like to play again? (y/n)" << endl;
-		cin.get(prompt, 1);
+		cin.get(prompt, 2);
 		cin.get();
 		if (prompt[0] == 'y') {
-			cout << "test";
 			return true;
 		}
 		else if (prompt[0] == 'n') {
-			cout << "test2";
 			return false;
 		}
 		else {
